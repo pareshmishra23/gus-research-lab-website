@@ -28,29 +28,7 @@ export default function Hero() {
             </Link>
           </div>
         </motion.div>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="hero-image"
-        >
-          {/* Optional: Add a stylized element or leave empty to let background shine */}
-          <div style={{ 
-            width: '100%', 
-            aspectRatio: '16/9', 
-            borderRadius: '16px', 
-            border: '1px solid rgba(255,255,255,0.1)',
-            backdropFilter: 'blur(4px)',
-            background: 'rgba(255,255,255,0.05)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '1.5rem',
-            color: 'rgba(255,255,255,0.5)'
-          }}>
-            GUS Research Lab
-          </div>
-        </motion.div>
+
       </div>
     </section>
   );

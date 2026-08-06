@@ -46,15 +46,10 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.creationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/api/items/**").permitAll()
-                                .requestMatchers("/api/articles/**").permitAll()
-                                .requestMatchers("/api/projects/**").permitAll()
-                                .requestMatchers("/api/videos/**").permitAll()
-                                .requestMatchers("/api/publications/**").permitAll()
-                                .anyRequest().authenticated()
+                        auth.requestMatchers("/api/**").permitAll()
+                                .anyRequest().permitAll()
                 );
 
         http.authenticationProvider(authenticationProvider());
