@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Play, Youtube, Eye, ThumbsUp, Calendar, Filter, Search, Sparkles, ExternalLink } from 'lucide-react';
+import { Play, Video, Eye, ThumbsUp, Calendar, Filter, Search, Sparkles, ExternalLink } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 
 export default function VideosPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeVideo, setActiveVideo] = useState(null);
 
   const categories = ['All', 'Quantum Computing', 'Artificial Intelligence', 'UAP Research', 'Space Science', 'Keynotes'];
 
@@ -48,7 +47,6 @@ export default function VideosPage() {
       duration: '45:12',
       views: '124K',
       date: 'May 14, 2026',
-      youtubeId: 'dQw4w9WgXcQ', // Placeholder
       thumbnail: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=800',
       description: 'Dr. Evelyn Vance presents our latest breakthrough in fault-tolerant quantum lattice structures.'
     },
@@ -59,7 +57,6 @@ export default function VideosPage() {
       duration: '38:40',
       views: '98K',
       date: 'April 29, 2026',
-      youtubeId: 'dQw4w9WgXcQ',
       thumbnail: 'https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&q=80&w=800',
       description: 'How real-time attention mechanisms process deep space probe signals with zero latency.'
     },
@@ -70,7 +67,6 @@ export default function VideosPage() {
       duration: '52:15',
       views: '310K',
       date: 'April 10, 2026',
-      youtubeId: 'dQw4w9WgXcQ',
       thumbnail: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800',
       description: 'Rigorous peer-reviewed evaluation of infrared and radar anomaly logs collected across 2025.'
     },
@@ -81,7 +77,6 @@ export default function VideosPage() {
       duration: '31:50',
       views: '76K',
       date: 'March 22, 2026',
-      youtubeId: 'dQw4w9WgXcQ',
       thumbnail: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&q=80&w=800',
       description: 'Supercomputer modeling of galactic rotation curves and dark matter distribution.'
     },
@@ -92,7 +87,6 @@ export default function VideosPage() {
       duration: '1:18:20',
       views: '215K',
       date: 'March 01, 2026',
-      youtubeId: 'dQw4w9WgXcQ',
       thumbnail: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=800',
       description: 'Full keynote address covering our roadmap across AI, quantum hardware, and space exploration.'
     },
@@ -103,7 +97,6 @@ export default function VideosPage() {
       duration: '29:45',
       views: '64K',
       date: 'February 15, 2026',
-      youtubeId: 'dQw4w9WgXcQ',
       thumbnail: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&q=80&w=800',
       description: 'An in-depth technical seminar on Majorana zero modes and protected entanglement.'
     }
@@ -132,7 +125,7 @@ export default function VideosPage() {
           <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div className="space-y-4 max-w-2xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 text-sm font-medium">
-                <Youtube className="w-4 h-4" /> Official YouTube Channel
+                <Video className="w-4 h-4" /> Official YouTube Channel
               </div>
               <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
                 GUS Research <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">Lab Media</span>
@@ -148,7 +141,7 @@ export default function VideosPage() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold transition shadow-lg shadow-red-600/30"
             >
-              <Youtube className="w-5 h-5" /> Subscribe on YouTube <ExternalLink className="w-4 h-4" />
+              <Video className="w-5 h-5" /> Subscribe on YouTube <ExternalLink className="w-4 h-4" />
             </a>
           </div>
 
@@ -275,7 +268,7 @@ export default function VideosPage() {
 
           {filteredVideos.length === 0 && (
             <div className="text-center py-16 bg-slate-900/40 rounded-3xl border border-slate-800">
-              <Youtube className="w-12 h-12 text-slate-600 mx-auto mb-4" />
+              <Video className="w-12 h-12 text-slate-600 mx-auto mb-4" />
               <h3 className="text-lg font-bold text-white">No videos found</h3>
               <p className="text-slate-400 text-sm mt-1">Try adjusting your search query or category filter.</p>
             </div>
@@ -286,4 +279,3 @@ export default function VideosPage() {
     </div>
   );
 }
-EOF
