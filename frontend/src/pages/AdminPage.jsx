@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Navbar from '../components/Navbar';
+import Banner from '../components/Banner';
 
 const API_BASE = 'http://localhost:8080/api';
 
@@ -82,21 +83,13 @@ export default function AdminPage() {
 
   return (
     <div>
-      {/* Navigation */}
-      <nav>
-        <div className="logo">🔬 GUS Research Lab - Admin</div>
-        <Link to="/">Back to Home</Link>
-      </nav>
+      <Navbar isAdmin={true} />
+      <Banner 
+        title="Admin Panel" 
+        subtitle="Manage research items and projects" 
+      />
 
-      {/* Banner */}
-      <div className="banner">
-        <h1>Admin Panel</h1>
-        <p>Manage research items and projects</p>
-      </div>
-
-      {/* Main Content */}
       <div className="container">
-        {/* Add Item Form */}
         <div className="admin-form">
           <h2>Add New Research Item</h2>
 
@@ -136,16 +129,7 @@ export default function AdminPage() {
                 name="category"
                 value={formData.category}
                 onChange={handleInputChange}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  backgroundColor: '#0f1b3c',
-                  border: '1px solid #3d5a8c',
-                  borderRadius: '4px',
-                  color: '#e8eef5',
-                  fontFamily: 'inherit',
-                  fontSize: '1rem',
-                }}
+                className="custom-select"
               >
                 <option value="Research">Research</option>
                 <option value="Development">Development</option>
@@ -162,16 +146,7 @@ export default function AdminPage() {
                 name="status"
                 value={formData.status}
                 onChange={handleInputChange}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  backgroundColor: '#0f1b3c',
-                  border: '1px solid #3d5a8c',
-                  borderRadius: '4px',
-                  color: '#e8eef5',
-                  fontFamily: 'inherit',
-                  fontSize: '1rem',
-                }}
+                className="custom-select"
               >
                 <option value="Active">Active</option>
                 <option value="Pending">Pending</option>
@@ -184,7 +159,6 @@ export default function AdminPage() {
           </form>
         </div>
 
-        {/* Items List */}
         <h2 style={{ marginBottom: '1rem', fontSize: '1.8rem' }}>Current Items</h2>
 
         {loading ? (

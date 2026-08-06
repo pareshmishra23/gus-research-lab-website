@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Navbar from '../components/Navbar';
+import Banner from '../components/Banner';
 
 const API_BASE = 'http://localhost:8080/api';
 
@@ -29,19 +30,12 @@ export default function HomePage() {
 
   return (
     <div>
-      {/* Navigation */}
-      <nav>
-        <div className="logo">🔬 GUS Research Lab</div>
-        <Link to="/admin">Admin Panel</Link>
-      </nav>
+      <Navbar />
+      <Banner 
+        title="GUS Research Lab" 
+        subtitle="Advancing scientific research and innovation through collaborative excellence" 
+      />
 
-      {/* Banner */}
-      <div className="banner">
-        <h1>GUS Research Lab</h1>
-        <p>Advancing scientific research and innovation through collaborative excellence</p>
-      </div>
-
-      {/* Main Content */}
       <div className="container">
         <h2 style={{ marginBottom: '1rem', fontSize: '1.8rem' }}>Research Projects & Items</h2>
 
