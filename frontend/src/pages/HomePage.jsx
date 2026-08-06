@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from '../components/Navbar';
 import Banner from '../components/Banner';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const API_BASE = 'http://localhost:8080/api';
 
@@ -30,35 +30,32 @@ export default function HomePage() {
 
   return (
     <div>
-      <Navbar />
       <Banner 
         title="GUS Research Lab" 
         subtitle="Advancing scientific research and innovation through collaborative excellence" 
       />
 
       <div className="container">
-        <h2 style={{ marginBottom: '1rem', fontSize: '1.8rem' }}>Research Projects & Items</h2>
+        <h2 style={{ marginBottom: '2rem', fontSize: '1.8rem', color: '#fff' }}>Research Projects & Items</h2>
 
         {error && <div className="error">{error}</div>}
 
         {loading ? (
-          <div className="loading">Loading research items...</div>
+          <LoadingSpinner />
         ) : items.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '2rem', color: '#4a7bba' }}>
+          <div style={{ textAlign: 'center', padding: '4rem', color: '#4a7bba' }}>
             <p>No research items yet. Visit the admin panel to add some!</p>
           </div>
         ) : (
           <div className="items-grid">
             {items.map((item) => (
               <div key={item.id} className="item-card">
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-                <div className="meta">
-                  <strong>Category:</strong> {item.category}
-                  <br />
-                  <strong>Status:</strong> {item.status}
-                  <br />
-                  <strong>Added:</strong> {new Date(item.createdAt).toLocaleDateString()}
+                <h3 style={{ color: '#fff', marginBottom: '1rem' }}>{item.title}</h3>
+                <p style={{ fontSize: '0.95rem', marginBottom: '1.5rem', opacity: 0.8 }}>{item.description}</p>
+                <div className="meta" style={{ fontSize: '0.8rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1rem' }}>
+                  <div style={{ marginBottom: '0.25rem' }}><strong style={{ color: '#4a7bba' }}>Category:</strong> {item.category}</div>
+                  <div style={{ marginBottom: '0.25rem' }}><strong style={{ color: '#4a7bba' }}>Status:</strong> {item.status}</div>
+                  <div><strong style={{ color: '#4a7bba' }}>Added:</strong> {new Date(item.createdAt).toLocaleDateString()}</div>
                 </div>
               </div>
             ))}
