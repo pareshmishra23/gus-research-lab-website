@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   FileText, 
@@ -9,6 +9,7 @@ import {
   LogOut,
   ChevronRight
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const menuItems = [
   { path: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -21,6 +22,13 @@ const menuItems = [
 
 export default function AdminLayout({ children }) {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <div className="admin-container">
@@ -50,7 +58,7 @@ export default function AdminLayout({ children }) {
         </nav>
 
         <div className="sidebar-footer">
-          <button className="logout-btn">
+          <button className="logout-btn" onClick={handleLogout}>
             <LogOut size={20} />
             <span>Logout</span>
           </button>
@@ -62,8 +70,8 @@ export default function AdminLayout({ children }) {
         <header className="admin-header">
           <h2>{menuItems.find(item => item.path === location.pathname)?.label || 'Admin'}</h2>
           <div className="admin-user">
-            <span>Admin User</span>
-            <div className="avatar">A</div>
+            <span>{user?.username || 'Admin User'}</span>
+            <div className="avatar">{user?.username?.charAt(0).toUpperCase() || 'A'}</div>
           </div>
         </header>
         <div className="admin-content">
