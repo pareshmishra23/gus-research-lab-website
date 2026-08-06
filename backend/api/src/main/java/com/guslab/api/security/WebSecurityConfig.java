@@ -46,7 +46,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.creationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/api/items/**").permitAll()
@@ -54,6 +54,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/projects/**").permitAll()
                                 .requestMatchers("/api/videos/**").permitAll()
                                 .requestMatchers("/api/publications/**").permitAll()
+                                .requestMatchers("/api/rag/**").permitAll()
                                 .anyRequest().authenticated()
                 );
 
