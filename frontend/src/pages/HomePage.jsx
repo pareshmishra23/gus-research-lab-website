@@ -1,7 +1,13 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Banner from '../components/Banner';
-import LoadingSpinner from '../components/LoadingSpinner';
+import Hero from '../components/Hero';
+import ResearchHighlights from '../components/ResearchHighlights';
+import FeaturedProjects from '../components/FeaturedProjects';
+import LatestVideos from '../components/LatestVideos';
+import Statistics from '../components/Statistics';
+import LatestPublications from '../components/LatestPublications';
+import Newsletter from '../components/Newsletter';
+import CallToAction from '../components/CallToAction';
 
 const API_BASE = 'http://localhost:8080/api';
 
@@ -30,38 +36,14 @@ export default function HomePage() {
 
   return (
     <div>
-      <Banner 
-        title="GUS Research Lab" 
-        subtitle="Advancing scientific research and innovation through collaborative excellence" 
-      />
-
-      <div className="container">
-        <h2 style={{ marginBottom: '2rem', fontSize: '1.8rem', color: '#fff' }}>Research Projects & Items</h2>
-
-        {error && <div className="error">{error}</div>}
-
-        {loading ? (
-          <LoadingSpinner />
-        ) : items.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '4rem', color: '#4a7bba' }}>
-            <p>No research items yet. Visit the admin panel to add some!</p>
-          </div>
-        ) : (
-          <div className="items-grid">
-            {items.map((item) => (
-              <div key={item.id} className="item-card">
-                <h3 style={{ color: '#fff', marginBottom: '1rem' }}>{item.title}</h3>
-                <p style={{ fontSize: '0.95rem', marginBottom: '1.5rem', opacity: 0.8 }}>{item.description}</p>
-                <div className="meta" style={{ fontSize: '0.8rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1rem' }}>
-                  <div style={{ marginBottom: '0.25rem' }}><strong style={{ color: '#4a7bba' }}>Category:</strong> {item.category}</div>
-                  <div style={{ marginBottom: '0.25rem' }}><strong style={{ color: '#4a7bba' }}>Status:</strong> {item.status}</div>
-                  <div><strong style={{ color: '#4a7bba' }}>Added:</strong> {new Date(item.createdAt).toLocaleDateString()}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      <Hero />
+      <ResearchHighlights />
+      <FeaturedProjects />
+      <Statistics />
+      <LatestVideos />
+      <LatestPublications />
+      <Newsletter />
+      <CallToAction />
     </div>
   );
 }
