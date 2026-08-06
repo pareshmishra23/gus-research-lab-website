@@ -8,6 +8,7 @@ const navLinks = [
   { path: '/research', label: 'Research', icon: FlaskConical },
   { path: '/blog', label: 'Blog', icon: BookOpen },
   { path: '/publications', label: 'Publications', icon: FileText },
+  { path: '/videos', label: 'Videos', icon: FlaskConical },
   { path: '/ai-assistant', label: 'AI Assistant', icon: Bot },
 ];
 

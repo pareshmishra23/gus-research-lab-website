@@ -6,6 +6,7 @@ import ResearchPage from './pages/ResearchPage';
 import BlogPage from './pages/BlogPage';
 import PublicationsPage from './pages/PublicationsPage';
 import AIResearchAssistant from './pages/AIResearchAssistant';
+import VideosPage from './pages/VideosPage';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/admin/Dashboard';
 import Articles from './pages/admin/Articles';
@@ -59,6 +60,7 @@ function AnimatedRoutes() {
         <Route path="/research" element={<PageWrapper><ResearchPage /></PageWrapper>} />
         <Route path="/blog" element={<PageWrapper><BlogPage /></PageWrapper>} />
         <Route path="/publications" element={<PageWrapper><PublicationsPage /></PageWrapper>} />
+        <Route path="/videos" element={<PageWrapper><VideosPage /></PageWrapper>} />
         <Route path="/ai-assistant" element={<PageWrapper><AIResearchAssistant /></PageWrapper>} />
         <Route path="/login" element={<PageWrapper><LoginPage /></PageWrapper>} />
         <Route path="/admin" element={<PageWrapper><AdminPage /></PageWrapper>} />

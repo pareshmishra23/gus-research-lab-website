@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: gus_postgres
+    environment:
+      POSTGRES_DB: guslab
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - gus-network
+
+  backend:
+    build:
+      context: ./backend/api
+      dockerfile: Dockerfile
+    container_name: gus_backend
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/guslab
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgrespassword
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - gus-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: gus_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - gus-network
+
+volumes:
+  postgres_data:
+
+networks:
+  gus-network:
+    driver: bridge
