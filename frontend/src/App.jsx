@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { AnimatePresence, motion } from 'framer-motion';
 import HomePage from './pages/HomePage';
 import AdminPage from './pages/AdminPage';
+import ResearchPage from './pages/ResearchPage';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Breadcrumbs from './components/Breadcrumbs';
@@ -30,6 +31,14 @@ function AnimatedRoutes() {
           element={
             <PageWrapper>
               <HomePage />
+            </PageWrapper>
+          } 
+        />
+        <Route 
+          path="/research" 
+          element={
+            <PageWrapper>
+              <ResearchPage />
             </PageWrapper>
           } 
         />
