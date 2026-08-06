@@ -10,6 +10,7 @@ const navLinks = [
   { path: '/publications', label: 'Publications', icon: FileText },
   { path: '/videos', label: 'Videos', icon: FlaskConical },
   { path: '/ai-assistant', label: 'AI Assistant', icon: Bot },
+  { path: '/rag-platform', label: 'RAG Platform', icon: Database },
 ];
 
 export default function Navbar() {

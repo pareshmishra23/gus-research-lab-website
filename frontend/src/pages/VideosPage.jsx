@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Play, Youtube, Eye, ThumbsUp, Calendar, Filter, Search, Sparkles, ExternalLink } from 'lucide-react';
+import { Play, Video as Youtube, Eye, ThumbsUp, Calendar, Filter, Search, Sparkles, ExternalLink } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 
 export default function VideosPage() {
