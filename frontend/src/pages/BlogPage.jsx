@@ -1,68 +1,57 @@
-import { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { Calendar, User, Clock, Tag, ChevronRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Calendar, User, Clock, Tag, ChevronRight, AlertCircle, Loader2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Helmet } from 'react-helmet-async';
+import axios from 'axios';
 import Banner from '../components/Banner';
 
-const blogPosts = [
+const staticPosts = [
   {
-    id: 1,
+    id: 101,
     title: 'The Future of Quantum Computing in 2026',
     excerpt: 'Exploring the latest breakthroughs in quantum supremacy and their practical applications.',
-    content: `
-# The Future of Quantum Computing in 2026
-
-Quantum computing has reached a pivotal moment. As we enter the second half of the decade, the transition from theoretical research to practical application is accelerating.
-
-## Key Breakthroughs
-- **Error Correction**: Significant progress in logical qubit stability.
-- **Algorithm Optimization**: New approaches to Shor's and Grover's algorithms.
-- **Hybrid Systems**: Integrating classical and quantum processors.
-
-> "The next five years will define the quantum landscape for the rest of the century." - Dr. Sarah Johnson
-
-Stay tuned for more updates from our Quantum Research Division.
-    `,
+    content: `# The Future of Quantum Computing in 2026\n\nQuantum computing has reached a pivotal moment.`,
     author: 'Dr. Sarah Johnson',
     date: '2026-08-05',
     category: 'Quantum Computing',
     tags: ['Quantum', 'Technology', 'Future'],
     image: '🌌'
-  },
-  {
-    id: 2,
-    title: 'Sustainable Energy: Beyond Lithium-Ion',
-    excerpt: 'New battery technologies that could revolutionize renewable energy storage.',
-    content: `
-# Sustainable Energy: Beyond Lithium-Ion
-
-The quest for higher energy density and safer storage has led to incredible innovations in solid-state and flow batteries.
-
-## Why it matters
-1. **Safety**: Reduced risk of thermal runaway.
-2. **Longevity**: More charge cycles without degradation.
-3. **Sustainability**: Using more abundant materials.
-
-Our Energy Lab is currently testing several prototypes that show promising results.
-    `,
-    author: 'Dr. Emma Wilson',
-    date: '2026-07-28',
-    category: 'Energy',
-    tags: ['Energy', 'Sustainability', 'Research'],
-    image: '⚡'
   }
 ];
 
 const calculateReadingTime = (text) => {
+  if (!text) return 1;
   const wordsPerMinute = 200;
   const words = text.split(/\s+/).length;
   return Math.ceil(words / wordsPerMinute);
 };
 
 export default function BlogPage() {
+  const [posts, setPosts] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get('http://localhost:8080/api/articles');
+      setPosts([...res.data, ...staticPosts]);
+      setError('');
+    } catch (err) {
+      console.error('Error fetching posts:', err);
+      setPosts(staticPosts);
+      // We don't show error here to keep the fallback clean
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="blog-page">
@@ -76,11 +65,15 @@ export default function BlogPage() {
         subtitle={selectedPost ? `By ${selectedPost.author} • ${new Date(selectedPost.date).toLocaleDateString()}` : "Latest news and thoughts from our researchers"} 
       />
 
-      <div className="container">
-        {selectedPost ? (
+      <div className="container" style={{ marginTop: '3rem', marginBottom: '5rem' }}>
+        {loading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '5rem' }}>
+            <Loader2 size={40} className="animate-spin text-accent-blue" />
+          </div>
+        ) : selectedPost ? (
           <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             className="blog-content-wrapper"
           >
             <button 
@@ -91,29 +84,29 @@ export default function BlogPage() {
               ← Back to Blog
             </button>
             
-            <div className="blog-full-content">
-              <div className="blog-meta-detailed">
-                <span><User size={16} /> {selectedPost.author}</span>
-                <span><Calendar size={16} /> {new Date(selectedPost.date).toLocaleDateString()}</span>
-                <span><Clock size={16} /> {calculateReadingTime(selectedPost.content)} min read</span>
+            <div className="card" style={{ padding: '3rem', background: '#162447', border: '1px solid #1a3a70', borderRadius: '16px' }}>
+              <div className="blog-meta-detailed" style={{ display: 'flex', gap: '2rem', marginBottom: '2rem', color: '#a0aec0', fontSize: '0.9rem' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><User size={16} /> {selectedPost.author}</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Calendar size={16} /> {new Date(selectedPost.date).toLocaleDateString()}</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Clock size={16} /> {calculateReadingTime(selectedPost.content)} min read</span>
               </div>
               
-              <div className="markdown-body">
+              <div className="markdown-body" style={{ color: '#e1e8ed', lineHeight: '1.8' }}>
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {selectedPost.content}
                 </ReactMarkdown>
               </div>
 
-              <div className="blog-tags">
-                {selectedPost.tags.map(tag => (
-                  <span key={tag} className="tag-badge">#{tag}</span>
+              <div className="blog-tags" style={{ marginTop: '3rem', display: 'flex', gap: '0.75rem' }}>
+                {selectedPost.tags && Array.isArray(selectedPost.tags) && selectedPost.tags.map(tag => (
+                  <span key={tag} className="tag-pill" style={{ background: 'rgba(74, 123, 186, 0.1)', color: '#4a7bba', padding: '0.3rem 0.8rem', borderRadius: '20px', fontSize: '0.85rem' }}>#{tag}</span>
                 ))}
               </div>
             </div>
           </motion.div>
         ) : (
-          <div className="blog-grid">
-            {blogPosts.map((post, index) => (
+          <div className="blog-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem' }}>
+            {posts.map((post, index) => (
               <motion.div
                 key={post.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -121,17 +114,20 @@ export default function BlogPage() {
                 transition={{ delay: index * 0.1 }}
                 className="blog-card"
                 onClick={() => setSelectedPost(post)}
+                style={{ cursor: 'pointer', background: '#162447', borderRadius: '12px', overflow: 'hidden', border: '1px solid #1a3a70', transition: 'all 0.3s' }}
               >
-                <div className="blog-card-image">{post.image}</div>
-                <div className="blog-card-body">
-                  <div className="blog-category">{post.category}</div>
-                  <h3>{post.title}</h3>
-                  <p>{post.excerpt}</p>
-                  <div className="blog-card-footer">
-                    <div className="blog-meta">
+                <div className="blog-card-image" style={{ height: '200px', background: 'linear-gradient(45deg, #0a1128, #1a3a70)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '4rem' }}>
+                  {post.image || '📄'}
+                </div>
+                <div className="blog-card-body" style={{ padding: '1.5rem' }}>
+                  <div className="blog-category" style={{ color: '#4a7bba', fontSize: '0.8rem', fontWeight: '600', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{post.category}</div>
+                  <h3 style={{ color: 'white', marginBottom: '1rem' }}>{post.title}</h3>
+                  <p style={{ color: '#a0aec0', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '1.5rem' }}>{post.excerpt}</p>
+                  <div className="blog-card-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div className="blog-meta" style={{ color: '#657786', fontSize: '0.85rem' }}>
                       <span><Clock size={14} /> {calculateReadingTime(post.content)} min read</span>
                     </div>
-                    <span className="read-more">
+                    <span className="read-more" style={{ color: '#4a7bba', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                       Read More <ChevronRight size={16} />
                     </span>
                   </div>
