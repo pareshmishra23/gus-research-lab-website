@@ -65,7 +65,7 @@ function AnimatedRoutes() {
         <Route path="/videos" element={<PageWrapper><VideosPage /></PageWrapper>} />
         <Route path="/ai-assistant" element={<PageWrapper><AIResearchAssistant /></PageWrapper>} />
         <Route path="/login" element={<PageWrapper><LoginPage /></PageWrapper>} />
-        <Route path="/admin" element={<ProtectedRoute><AdminLayout><PageWrapper><AdminPage /></PageWrapper></AdminLayout></ProtectedRoute>} />
+        <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
 
         {/* Admin Dashboard Routes */}
         <Route path="/admin/dashboard" element={<ProtectedRoute><AdminLayout><PageWrapper><Dashboard /></PageWrapper></AdminLayout></ProtectedRoute>} />

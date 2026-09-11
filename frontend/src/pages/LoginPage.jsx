@@ -31,6 +31,11 @@ export default function LoginPage() {
     }
   };
 
+  const handleFillDemo = () => {
+    setUsername('paresh.mishra23@gmail.com');
+    setPassword('GulluMishra23*');
+  };
+
   return (
     <div className="login-page">
       <motion.div 
@@ -42,6 +47,43 @@ export default function LoginPage() {
           <div className="login-logo">🔬</div>
           <h2>Admin Login</h2>
           <p>Access GUS Research Lab Management</p>
+        </div>
+
+        <div style={{ 
+          background: 'rgba(59, 130, 246, 0.1)', 
+          border: '1px solid rgba(59, 130, 246, 0.3)', 
+          borderRadius: '8px', 
+          padding: '0.85rem 1rem', 
+          marginBottom: '1.25rem',
+          fontSize: '0.85rem',
+          color: '#93c5fd',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <div>
+            <strong>Super Admin Credentials:</strong>
+            <div style={{ fontSize: '0.8rem', opacity: 0.9, marginTop: '2px' }}>
+              paresh.mishra23@gmail.com / GulluMishra23*
+            </div>
+          </div>
+          <button 
+            type="button" 
+            onClick={handleFillDemo}
+            style={{
+              background: 'rgba(59, 130, 246, 0.3)',
+              border: 'none',
+              color: '#fff',
+              padding: '0.35rem 0.65rem',
+              borderRadius: '4px',
+              fontSize: '0.75rem',
+              cursor: 'pointer',
+              fontWeight: 600,
+              whiteSpace: 'nowrap'
+            }}
+          >
+            Auto Fill
+          </button>
         </div>
 
         {error && (

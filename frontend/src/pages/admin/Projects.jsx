@@ -129,10 +129,20 @@ export default function Projects() {
     }));
   };
 
+  const normalizeUrl = (url) => {
+    if (!url || !url.trim()) return '';
+    let trimmed = url.trim();
+    if (!/^https?:\/\//i.test(trimmed)) {
+      trimmed = 'https://' + trimmed;
+    }
+    return trimmed;
+  };
+
   const validateUrl = (url) => {
     if (!url || url.trim() === '') return true;
     try {
-      const parsed = new URL(url.trim());
+      const normalized = normalizeUrl(url);
+      const parsed = new URL(normalized);
       return parsed.protocol === 'http:' || parsed.protocol === 'https:';
     } catch (_) {
       return false;
@@ -155,21 +165,24 @@ export default function Projects() {
     }
 
     if (formData.liveUrl && !validateUrl(formData.liveUrl)) {
-      setError('Please enter a valid HTTP or HTTPS URL.');
+      setError('Please enter a valid Web / LinkedIn URL.');
       return;
     }
 
+    const normalizedLiveUrl = formData.liveUrl ? normalizeUrl(formData.liveUrl) : '';
+
     // Format tags and technology arrays
     const formattedTags = formData.tags
-      ? formData.tags.split(',').map(t => t.trim()).filter(Boolean)
+      ? (Array.isArray(formData.tags) ? formData.tags : formData.tags.split(',')).map(t => t.trim()).filter(Boolean)
       : [];
     
     const formattedTech = formData.technology
-      ? formData.technology.split(',').map(t => t.trim()).filter(Boolean)
+      ? (Array.isArray(formData.technology) ? formData.technology : formData.technology.split(',')).map(t => t.trim()).filter(Boolean)
       : [];
 
     const payload = {
       ...formData,
+      liveUrl: normalizedLiveUrl,
       tags: formattedTags,
       technology: formattedTech,
       displayOrder: Number(formData.displayOrder) || 1
@@ -188,7 +201,7 @@ export default function Projects() {
       fetchProjects();
     } catch (err) {
       console.error('Error saving project:', err);
-      setError(err.response?.data || 'Failed to save project. Please check fields.');
+      setError(typeof err.response?.data === 'string' ? err.response.data : (err.response?.data?.message || 'Failed to save project. Please check fields.'));
     } finally {
       setSaving(false);
     }
@@ -232,15 +245,16 @@ export default function Projects() {
 
   const handleSaveInlineUrl = async (project) => {
     if (inlineUrl && !validateUrl(inlineUrl)) {
-      setError('Please enter a valid HTTP or HTTPS URL.');
+      setError('Please enter a valid Web / LinkedIn URL.');
       return;
     }
 
     try {
       setSaving(true);
+      const normalized = normalizeUrl(inlineUrl);
       await updateProject(project.id, {
         ...project,
-        liveUrl: inlineUrl.trim()
+        liveUrl: normalized
       });
       setEditingUrlId(null);
       setSuccess(`Live URL updated for "${project.title}".`);
@@ -629,6 +643,12 @@ export default function Projects() {
                 <X size={20} />
               </button>
             </div>
+
+            {error && (
+              <div style={{ padding: '0.75rem 1rem', background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.4)', borderRadius: '8px', color: '#fca5a5', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem' }}>
+                <AlertCircle size={16} /> {error}
+              </div>
+            )}
 
             <form onSubmit={handleSubmit}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>

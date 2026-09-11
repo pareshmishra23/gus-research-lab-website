@@ -83,11 +83,13 @@ public class ProjectController {
             return ResponseEntity.badRequest().body("Title is required.");
         }
 
-        // Validate Live Demo URL if present
+        // Validate and normalize Live Demo URL if present
         if (project.getLiveUrl() != null && !project.getLiveUrl().trim().isEmpty()) {
-            if (!isValidUrl(project.getLiveUrl())) {
+            String normalizedUrl = normalizeAndValidateUrl(project.getLiveUrl());
+            if (normalizedUrl == null) {
                 return ResponseEntity.badRequest().body("Please enter a valid HTTP or HTTPS URL.");
             }
+            project.setLiveUrl(normalizedUrl);
         }
 
         // Generate Slug
@@ -126,11 +128,13 @@ public class ProjectController {
         Project existing = existingOpt.get();
         String oldUrl = existing.getLiveUrl();
 
-        // Validate URL
+        // Validate and normalize URL
         if (updated.getLiveUrl() != null && !updated.getLiveUrl().trim().isEmpty()) {
-            if (!isValidUrl(updated.getLiveUrl())) {
+            String normalizedUrl = normalizeAndValidateUrl(updated.getLiveUrl());
+            if (normalizedUrl == null) {
                 return ResponseEntity.badRequest().body("Please enter a valid HTTP or HTTPS URL.");
             }
+            updated.setLiveUrl(normalizedUrl);
         }
 
         existing.setTitle(updated.getTitle());
@@ -253,15 +257,23 @@ public class ProjectController {
         return ResponseEntity.ok(Map.of("message", "Project permanently deleted successfully."));
     }
 
-    // Helper: URL Validation
-    private boolean isValidUrl(String url) {
-        try {
-            URI uri = new URI(url.trim());
-            String scheme = uri.getScheme();
-            return scheme != null && (scheme.equalsIgnoreCase("http") || scheme.equalsIgnoreCase("https"));
-        } catch (Exception e) {
-            return false;
+    // Helper: URL Validation & Normalization
+    private String normalizeAndValidateUrl(String urlStr) {
+        if (urlStr == null || urlStr.trim().isEmpty()) {
+            return "";
         }
+        String trimmed = urlStr.trim();
+        if (!trimmed.toLowerCase().startsWith("http://") && !trimmed.toLowerCase().startsWith("https://")) {
+            trimmed = "https://" + trimmed;
+        }
+        try {
+            URI uri = new URI(trimmed);
+            String scheme = uri.getScheme();
+            if (scheme != null && (scheme.equalsIgnoreCase("http") || scheme.equalsIgnoreCase("https"))) {
+                return trimmed;
+            }
+        } catch (Exception ignored) {}
+        return null;
     }
 
     // Helper: Slug Generator
