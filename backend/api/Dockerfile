@@ -6,10 +6,9 @@ RUN mvn dependency:go-offline -B || true
 COPY src ./src
 RUN mvn package -DskipTests
 
-# Stage 2: Production JRE Runtime
-FROM eclipse-temurin:17-jre-alpine
+# Stage 2: Production JRE Runtime (Multi-architecture ARM64 / x86_64 support)
+FROM eclipse-temurin:17-jre
 WORKDIR /app
-RUN apk add --no-cache curl
 COPY --from=builder /build/target/*.jar app.jar
 
 EXPOSE 8080
