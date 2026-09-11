@@ -47,7 +47,17 @@ Enterprise full-stack research laboratory platform featuring a dynamic React fro
 
 ## 🚀 Execution Modes
 
-### Mode A — Native Local Development (Without Docker)
+### Single Command Native Launcher (Recommended)
+
+Run both Spring Boot and Vite Frontend with a single command without Docker:
+
+```bash
+./start-native.sh
+```
+
+---
+
+### Mode A — Manual Native Local Development (Without Docker)
 
 #### Terminal 1 — Spring Boot Backend
 ```bash
