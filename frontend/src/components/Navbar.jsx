@@ -51,6 +51,12 @@ export default function Navbar() {
               label: n.label || 'Link',
               icon: n.label === 'Admin Panel' ? Shield : (n.label === 'AI Assistant' ? Bot : FlaskConical)
             }));
+          
+          const hasAdmin = enabledLinks.some(l => l.label === 'Admin Panel' || l.path === '/admin');
+          if (!hasAdmin) {
+            enabledLinks.push({ path: '/admin', label: 'Admin Panel', icon: Shield });
+          }
+
           setNavItems(enabledLinks);
         }
       }

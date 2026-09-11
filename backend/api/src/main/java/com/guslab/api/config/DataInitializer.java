@@ -110,7 +110,8 @@ public class DataInitializer implements CommandLineRunner {
             new SiteSettings.NavLink("Blog", "/blog", true, 3),
             new SiteSettings.NavLink("Publications", "/publications", true, 4),
             new SiteSettings.NavLink("Videos", "/videos", true, 5),
-            new SiteSettings.NavLink("AI Assistant", "/ai-assistant", true, 6)
+            new SiteSettings.NavLink("AI Assistant", "/ai-assistant", true, 6),
+            new SiteSettings.NavLink("Admin Panel", "/admin", true, 7)
         );
         settings.setNavigationLinks(new ArrayList<>(navLinks));
 
