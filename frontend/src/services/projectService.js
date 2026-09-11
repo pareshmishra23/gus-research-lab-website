@@ -26,7 +26,68 @@ export const getPublicProjectDetail = async (slugOrId) => {
   }
 };
 
-// Admin API calls
+// Site Settings API
+export const getPublicSiteSettings = async () => {
+  try {
+    const response = await axios.get(`${API_BASE}/site-settings`);
+    return response.data;
+  } catch (error) {
+    console.warn('Failed to fetch site settings, returning defaults:', error);
+    return {
+      siteName: 'GUS Research Lab',
+      shortName: 'GUS LAB',
+      footerDescription: 'Pioneering scientific breakthroughs through innovation and collaboration.',
+      contactEmail: 'info@guslab.res',
+      contactPhone: '+1 (555) 123-4567',
+      contactAddress: '123 Science Way, Research City',
+      heroTitle: 'Pioneering Scientific Discovery',
+      heroSubtitle: 'Advancing knowledge through innovative research, collaborative excellence, and cutting-edge technology.',
+      primaryCtaLabel: 'Explore Research',
+      primaryCtaUrl: '/research',
+      secondaryCtaLabel: 'View Projects',
+      secondaryCtaUrl: '/research',
+      footerLinks: [
+        { label: 'Home', url: '/', enabled: true, displayOrder: 1 },
+        { label: 'Research', url: '/research', enabled: true, displayOrder: 2 },
+        { label: 'Publications', url: '/publications', enabled: true, displayOrder: 3 },
+        { label: 'Videos', url: '/videos', enabled: true, displayOrder: 4 },
+        { label: 'AI Assistant', url: '/ai-assistant', enabled: true, displayOrder: 5 },
+        { label: 'Admin Panel', url: '/admin', enabled: true, displayOrder: 6 }
+      ],
+      socialLinks: [
+        { platform: 'GitHub', url: 'https://github.com', enabled: true, displayOrder: 1 },
+        { platform: 'LinkedIn', url: 'https://linkedin.com', enabled: true, displayOrder: 2 },
+        { platform: 'YouTube', url: 'https://youtube.com', enabled: true, displayOrder: 3 },
+        { platform: 'X / Twitter', url: 'https://x.com', enabled: true, displayOrder: 4 }
+      ],
+      navigationLinks: [
+        { label: 'Home', url: '/', enabled: true, displayOrder: 1 },
+        { label: 'Research', url: '/research', enabled: true, displayOrder: 2 },
+        { label: 'Blog', url: '/blog', enabled: true, displayOrder: 3 },
+        { label: 'Publications', url: '/publications', enabled: true, displayOrder: 4 },
+        { label: 'Videos', url: '/videos', enabled: true, displayOrder: 5 },
+        { label: 'AI Assistant', url: '/ai-assistant', enabled: true, displayOrder: 6 }
+      ]
+    };
+  }
+};
+
+export const updateSiteSettings = async (settings) => {
+  const response = await axios.put(`${API_BASE}/admin/site-settings`, settings);
+  return response.data;
+};
+
+export const getNavigationLinks = async () => {
+  const response = await axios.get(`${API_BASE}/admin/navigation`);
+  return response.data;
+};
+
+export const updateNavigationLinks = async (navLinks) => {
+  const response = await axios.put(`${API_BASE}/admin/navigation`, navLinks);
+  return response.data;
+};
+
+// Admin Projects API
 export const getAdminProjects = async () => {
   const response = await axios.get(`${API_BASE}/projects/admin/all`);
   return response.data;

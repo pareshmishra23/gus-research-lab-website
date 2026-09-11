@@ -1,9 +1,46 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Layers } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { projects } from '../data/projects';
+import { getPublicSiteSettings, getPublicProjects } from '../services/projectService';
 
 export default function Hero() {
+  const [projectCount, setProjectCount] = useState(5);
+  const [heroData, setHeroData] = useState({
+    heroTitle: 'Pioneering Scientific Discovery',
+    heroSubtitle: 'Advancing knowledge through innovative research, collaborative excellence, and cutting-edge technology.',
+    primaryCtaLabel: 'Explore Research',
+    primaryCtaUrl: '/research',
+    secondaryCtaLabel: 'View Projects',
+    secondaryCtaUrl: '/research'
+  });
+
+  useEffect(() => {
+    fetchHeroSettings();
+  }, []);
+
+  const fetchHeroSettings = async () => {
+    try {
+      const data = await getPublicSiteSettings();
+      if (data) {
+        setHeroData({
+          heroTitle: data.heroTitle || 'Pioneering Scientific Discovery',
+          heroSubtitle: data.heroSubtitle || 'Advancing knowledge through innovative research, collaborative excellence, and cutting-edge technology.',
+          primaryCtaLabel: data.primaryCtaLabel || 'Explore Research',
+          primaryCtaUrl: data.primaryCtaUrl || '/research',
+          secondaryCtaLabel: data.secondaryCtaLabel || 'View Projects',
+          secondaryCtaUrl: data.secondaryCtaUrl || '/research'
+        });
+      }
+      const projects = await getPublicProjects();
+      if (Array.isArray(projects)) {
+        setProjectCount(projects.length);
+      }
+    } catch (err) {
+      console.warn('Error loading dynamic hero settings:', err);
+    }
+  };
+
   return (
     <section className="hero-section" style={{ 
       backgroundImage: 'linear-gradient(rgba(10, 17, 40, 0.75), rgba(10, 17, 40, 0.9)), url("/assets/banner.png")',
@@ -43,7 +80,7 @@ export default function Hero() {
           
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.35rem', marginBottom: '0.4rem' }}>
             <div style={{ background: 'rgba(30, 41, 59, 0.7)', padding: '0.3rem 0.4rem', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.05)' }}>
-              <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#ffffff', lineHeight: 1.1 }}>{projects.length}</div>
+              <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#ffffff', lineHeight: 1.1 }}>{projectCount}</div>
               <div style={{ fontSize: '0.575rem', color: '#94a3b8', marginTop: '1px' }}>Live Projects</div>
             </div>
             <div style={{ background: 'rgba(30, 41, 59, 0.7)', padding: '0.3rem 0.4rem', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.05)' }}>
@@ -90,18 +127,18 @@ export default function Hero() {
           </div>
 
           <h1 style={{ fontSize: '3.5rem', fontWeight: 800, textShadow: '0 4px 12px rgba(0,0,0,0.6)', lineHeight: 1.15, marginBottom: '1.5rem', color: '#ffffff' }}>
-            Pioneering Scientific Discovery
+            {heroData.heroTitle}
           </h1>
           <p style={{ fontSize: '1.2rem', color: '#cbd5e1', textShadow: '0 2px 6px rgba(0,0,0,0.6)', maxWidth: '680px', margin: '0 auto', lineHeight: 1.6 }}>
-            Advancing knowledge through innovative research, collaborative excellence, and cutting-edge technology.
+            {heroData.heroSubtitle}
           </p>
 
           <div className="hero-buttons" style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginTop: '3.5rem' }}>
-            <Link to="/research" className="btn btn-primary" style={{ padding: '0.875rem 2.25rem', fontSize: '1rem', fontWeight: 600, borderRadius: '12px' }}>
-              Explore Research <ArrowRight size={20} />
+            <Link to={heroData.primaryCtaUrl || '/research'} className="btn btn-primary" style={{ padding: '0.875rem 2.25rem', fontSize: '1rem', fontWeight: 600, borderRadius: '12px' }}>
+              {heroData.primaryCtaLabel} <ArrowRight size={20} />
             </Link>
-            <Link to="/research" className="btn btn-secondary" style={{ padding: '0.875rem 2.25rem', fontSize: '1rem', fontWeight: 600, borderRadius: '12px', color: 'white', borderColor: 'rgba(255,255,255,0.4)', background: 'rgba(255,255,255,0.08)' }}>
-              <Layers size={18} style={{ marginRight: '6px' }} /> View Projects
+            <Link to={heroData.secondaryCtaUrl || '/research'} className="btn btn-secondary" style={{ padding: '0.875rem 2.25rem', fontSize: '1rem', fontWeight: 600, borderRadius: '12px', color: 'white', borderColor: 'rgba(255,255,255,0.4)', background: 'rgba(255,255,255,0.08)' }}>
+              <Layers size={18} style={{ marginRight: '6px' }} /> {heroData.secondaryCtaLabel}
             </Link>
           </div>
         </motion.div>

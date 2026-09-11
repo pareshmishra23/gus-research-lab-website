@@ -1,14 +1,17 @@
 package com.guslab.api.config;
 
 import com.guslab.api.model.Project;
+import com.guslab.api.model.SiteSettings;
 import com.guslab.api.model.User;
 import com.guslab.api.repository.ProjectRepository;
+import com.guslab.api.repository.SiteSettingsRepository;
 import com.guslab.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -20,6 +23,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private SiteSettingsRepository siteSettingsRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -54,6 +60,63 @@ public class DataInitializer implements CommandLineRunner {
         if (projectRepository.count() == 0) {
             seedProjects();
         }
+
+        // Seed Site Settings if empty
+        if (siteSettingsRepository.count() == 0) {
+            seedSiteSettings();
+        }
+    }
+
+    private void seedSiteSettings() {
+        SiteSettings settings = new SiteSettings();
+        settings.setSiteName("GUS Research Lab");
+        settings.setShortName("GUS LAB");
+        settings.setFooterDescription("Pioneering scientific breakthroughs through innovation and collaboration.");
+        settings.setContactEmail("info@guslab.res");
+        settings.setContactPhone("+1 (555) 123-4567");
+        settings.setContactAddress("123 Science Way, Research City");
+
+        settings.setHeroTitle("Pioneering Scientific Discovery");
+        settings.setHeroSubtitle("Advancing knowledge through innovative research, collaborative excellence, and cutting-edge technology.");
+        settings.setPrimaryCtaLabel("Explore Research");
+        settings.setPrimaryCtaUrl("/research");
+        settings.setSecondaryCtaLabel("View Projects");
+        settings.setSecondaryCtaUrl("/research");
+
+        // Footer Quick Links
+        List<SiteSettings.FooterLink> footerLinks = List.of(
+            new SiteSettings.FooterLink("Home", "/", true, 1),
+            new SiteSettings.FooterLink("Research", "/research", true, 2),
+            new SiteSettings.FooterLink("Publications", "/publications", true, 3),
+            new SiteSettings.FooterLink("Videos", "/videos", true, 4),
+            new SiteSettings.FooterLink("AI Assistant", "/ai-assistant", true, 5),
+            new SiteSettings.FooterLink("Admin Panel", "/admin", true, 6)
+        );
+        settings.setFooterLinks(new ArrayList<>(footerLinks));
+
+        // Social Links
+        List<SiteSettings.SocialLink> socialLinks = List.of(
+            new SiteSettings.SocialLink("GitHub", "https://github.com", true, 1),
+            new SiteSettings.SocialLink("LinkedIn", "https://linkedin.com", true, 2),
+            new SiteSettings.SocialLink("YouTube", "https://youtube.com", true, 3),
+            new SiteSettings.SocialLink("X / Twitter", "https://x.com", true, 4)
+        );
+        settings.setSocialLinks(new ArrayList<>(socialLinks));
+
+        // Navigation Links
+        List<SiteSettings.NavLink> navLinks = List.of(
+            new SiteSettings.NavLink("Home", "/", true, 1),
+            new SiteSettings.NavLink("Research", "/research", true, 2),
+            new SiteSettings.NavLink("Blog", "/blog", true, 3),
+            new SiteSettings.NavLink("Publications", "/publications", true, 4),
+            new SiteSettings.NavLink("Videos", "/videos", true, 5),
+            new SiteSettings.NavLink("AI Assistant", "/ai-assistant", true, 6)
+        );
+        settings.setNavigationLinks(new ArrayList<>(navLinks));
+
+        settings.setUpdatedBy("SYSTEM");
+        siteSettingsRepository.save(settings);
+        System.out.println(">>> Initialized Site Settings in Database!");
     }
 
     private void seedProjects() {
