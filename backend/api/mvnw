@@ -1,0 +1,3 @@
+#!/bin/sh
+# Maven Wrapper Executable Script for POSIX systems
+exec mvn "$@"

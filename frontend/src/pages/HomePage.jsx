@@ -9,7 +9,7 @@ import LatestPublications from '../components/LatestPublications';
 import Newsletter from '../components/Newsletter';
 import CallToAction from '../components/CallToAction';
 
-const API_BASE = 'http://localhost:8080/api';
+import { API_BASE } from '../services/api';
 
 export default function HomePage() {
   const [items, setItems] = useState([]);

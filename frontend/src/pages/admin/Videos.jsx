@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Trash2, Edit2, Save, X, Video, Search, AlertCircle } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE } from '../../services/api';
 
 export default function Videos() {
   const [videos, setVideos] = useState([]);
@@ -24,7 +25,7 @@ export default function Videos() {
   const fetchVideos = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:8080/api/videos');
+      const res = await axios.get(`${API_BASE}/videos`);
       setVideos(res.data);
       setError('');
     } catch (err) {
@@ -41,7 +42,7 @@ export default function Videos() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:8080/api/videos', formData);
+      await axios.post(`${API_BASE}/videos`, formData);
       setIsAdding(false);
       setFormData({ title: '', url: '', description: '', category: '', views: '0' });
       fetchVideos();
@@ -53,7 +54,7 @@ export default function Videos() {
   const handleDelete = async (id) => {
     if (window.confirm('Delete this video?')) {
       try {
-        await axios.delete(`http://localhost:8080/api/videos/${id}`);
+        await axios.delete(`${API_BASE}/videos/${id}`);
         fetchVideos();
       } catch (err) {
         setError('Failed to delete video.');

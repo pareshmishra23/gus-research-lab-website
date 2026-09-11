@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Trash2, Edit2, Save, X, FileText, Search, AlertCircle } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE } from '../../services/api';
+import { Plus, Trash2, Edit2, Save, X, FileText, Search, AlertCircle } from 'lucide-react';
 
 export default function Articles() {
   const [articles, setArticles] = useState([]);
-  const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isAdding, setIsAdding] = useState(false);
   
   const [formData, setFormData] = useState({
     title: '',
@@ -25,7 +26,7 @@ export default function Articles() {
   const fetchArticles = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:8080/api/articles');
+      const res = await axios.get(`${API_BASE}/articles`);
       setArticles(res.data);
       setError('');
     } catch (err) {
@@ -49,7 +50,7 @@ export default function Articles() {
         date: new Date().toISOString()
       };
       
-      await axios.post('http://localhost:8080/api/articles', dataToSend);
+      await axios.post(`${API_BASE}/articles`, dataToSend);
       setIsAdding(false);
       setFormData({ title: '', excerpt: '', content: '', author: '', category: '', tags: '' });
       fetchArticles();
@@ -61,7 +62,7 @@ export default function Articles() {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this article?')) {
       try {
-        await axios.delete(`http://localhost:8080/api/articles/${id}`);
+        await axios.delete(`${API_BASE}/articles/${id}`);
         fetchArticles();
       } catch (err) {
         setError('Failed to delete article.');

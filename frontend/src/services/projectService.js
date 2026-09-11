@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { projects as fallbackProjects } from '../data/projects';
-
-const API_BASE = 'http://localhost:8080/api';
+import { API_BASE } from './api';
 
 export const getPublicProjects = async () => {
   try {

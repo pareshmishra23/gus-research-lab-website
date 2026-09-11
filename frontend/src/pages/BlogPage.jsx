@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Helmet } from 'react-helmet-async';
 import axios from 'axios';
+import { API_BASE } from '../services/api';
 import Banner from '../components/Banner';
 
 const staticPosts = [
@@ -41,7 +42,7 @@ export default function BlogPage() {
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:8080/api/articles');
+      const res = await axios.get(`${API_BASE}/articles`);
       setPosts([...res.data, ...staticPosts]);
       setError('');
     } catch (err) {

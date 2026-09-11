@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE } from '../services/api';
 import Banner from '../components/Banner';
-import LoadingSpinner from '../components/LoadingSpinner';
-
-const API_BASE = 'http://localhost:8080/api';
 
 export default function AdminPage() {
   const [items, setItems] = useState([]);

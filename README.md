@@ -1,35 +1,138 @@
-# GUS Research Lab Project
+# GUS Research Lab — Full-Stack Application & CMS
 
-This project consists of a React JS frontend and a Spring Boot backend.
+Enterprise full-stack research laboratory platform featuring a dynamic React frontend, Spring Boot 3.2 REST API backend, Admin Content Management System (CMS), role-based security, audit logging, and containerized deployment options.
 
-## Project Structure
+---
 
-- `frontend/`: React JS application built with Vite and Tailwind CSS.
-- `backend/api/`: Spring Boot application providing REST APIs.
+## 🏛️ System Architecture
 
-## Features
+```text
+                    GUS RESEARCH LAB
+                           |
+                    Public Website
+                           |
+                    ┌──────┴──────┐
+                    │   Frontend  │
+                    │ React / Vite│
+                    └──────┬──────┘
+                           |
+                         REST
+                           |
+                    ┌──────┴──────┐
+                    │ Spring Boot │
+                    │    API      │
+                    └──────┬──────┘
+                           |
+              ┌────────────┼────────────┐
+              │            │            │
+           Projects    Site Config    Admins
+              │            │            │
+              └────────────┼────────────┘
+                           |
+                       Database
+                (H2 Local / PostgreSQL)
+```
 
-- **Dark Blue Theme**: Professional scientific lab design.
-- **Banner**: Eye-catching hero section.
-- **Public Page**: Displays all research items and projects.
-- **Admin Page**: Add and manage research items.
-- **REST API**: Spring Boot backend with H2 in-memory database.
+---
 
-## Getting Started
+## 🔌 Configured Application Ports
 
-### Backend (Spring Boot)
-1. Navigate to `backend/api/`.
-2. Ensure you have Java 17 and Maven installed.
-3. Run `./mvnw spring-boot:run` (or use your IDE).
-4. The API will be available at `http://localhost:8080/api/items`.
+| Service | Protocol | Local / Native Port | Container Port | Purpose |
+| :--- | :--- | :--- | :--- | :--- |
+| **Frontend** | HTTP | `5173` (Dev) / `80` (Prod) | `80` | Web UI & Nginx Reverse Proxy |
+| **Spring Boot API** | HTTP | `8080` | `8080` | Core REST APIs & Admin CMS |
+| **PostgreSQL DB** | TCP | `5432` | `5432` | Enterprise Relational Database |
 
-### Frontend (React)
-1. Navigate to `frontend/`.
-2. Run `npm install` to install dependencies.
-3. Run `npm run dev` to start the development server.
-4. The website will be available at `http://localhost:5173`.
+---
 
-## Technologies Used
+## 🚀 Execution Modes
 
-- **Frontend**: React, React Router, Axios, CSS (Dark Blue Theme).
-- **Backend**: Spring Boot, Spring Data JPA, H2 Database, Lombok.
+### Mode A — Native Local Development (Without Docker)
+
+#### Terminal 1 — Spring Boot Backend
+```bash
+cd backend/api
+mvn spring-boot:run
+```
+*Or using the Maven wrapper:*
+```bash
+cd backend/api
+./mvnw spring-boot:run
+```
+- Backend starts at: `http://localhost:8080`
+- Actuator Health Endpoint: `http://localhost:8080/actuator/health`
+- H2 Database Console: `http://localhost:8080/h2-console`
+
+#### Terminal 2 — Vite / React Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+- Frontend dev server starts at: `http://localhost:5173`
+
+---
+
+### Mode B — Dockerized Production Execution (Docker Compose)
+
+Launch the complete containerized stack (Frontend, Backend, PostgreSQL) with a single command:
+
+```bash
+docker compose up --build
+```
+
+#### Stopping the Stack:
+```bash
+docker compose down
+```
+
+- Public Website: `http://localhost`
+- Admin CMS Panel: `http://localhost/admin`
+- Backend API via Proxy: `http://localhost/api`
+- Actuator Health Check: `http://localhost/actuator/health`
+
+---
+
+## ⚙️ Environment Variables
+
+The application is fully configurable via environment variables without hardcoded secrets. Copy `.env.example` to `.env` to customize settings:
+
+```bash
+cp .env.example .env
+```
+
+### Key Environment Variables:
+
+| Variable | Default Value | Description |
+| :--- | :--- | :--- |
+| `SPRING_DATASOURCE_URL` | `jdbc:postgresql://postgres:5432/guslab` | Database connection URL |
+| `SPRING_DATASOURCE_USERNAME` | `postgres` | Database username |
+| `SPRING_DATASOURCE_PASSWORD` | `postgrespassword` | Database password |
+| `JWT_SECRET` | *Configured in env* | 256-bit key for signing Admin JWT tokens |
+| `CORS_ALLOWED_ORIGINS` | `http://localhost:5173,http://localhost:80` | Allowed cross-origin domains |
+| `VITE_API_BASE_URL` | `/api` | Base URL for frontend REST API requests |
+
+---
+
+## 🔬 Admin Credentials
+
+- **Super Admin Email / Username**: `paresh.mishra23@gmail.com`
+- **Password**: `GulluMishra23*`
+
+---
+
+## 🛠️ Build & Verification Commands
+
+### Backend Verification:
+```bash
+cd backend/api
+mvn test
+mvn package -DskipTests
+```
+
+### Frontend Verification:
+```bash
+cd frontend
+npm install
+npm run build
+```
