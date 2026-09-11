@@ -9,7 +9,7 @@ export default function Hero() {
       backgroundImage: 'linear-gradient(rgba(10, 17, 40, 0.75), rgba(10, 17, 40, 0.9)), url("/assets/banner.png")',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      padding: '8rem 2rem 7rem',
+      padding: '5rem 2rem 6.5rem',
       position: 'relative',
       overflow: 'hidden'
     }}>
@@ -71,7 +71,19 @@ export default function Hero() {
           transition={{ duration: 0.6 }}
           className="hero-text"
         >
-          <div style={{ display: 'inline-block', padding: '0.35rem 1.25rem', borderRadius: '9999px', background: 'rgba(59, 130, 246, 0.12)', border: '1px solid rgba(59, 130, 246, 0.3)', color: '#60a5fa', fontSize: '0.85rem', fontWeight: 600, marginBottom: '1.25rem', letterSpacing: '0.04em' }}>
+          <div style={{ 
+            display: 'inline-block', 
+            padding: '0.35rem 1.25rem', 
+            borderRadius: '9999px', 
+            background: 'rgba(59, 130, 246, 0.12)', 
+            border: '1px solid rgba(59, 130, 246, 0.3)', 
+            color: '#60a5fa', 
+            fontSize: '0.85rem', 
+            fontWeight: 600, 
+            marginTop: '-1.25rem',
+            marginBottom: '1.5rem', 
+            letterSpacing: '0.04em' 
+          }}>
             AI • ML • Scientific Computing • Experimental Systems
           </div>
 
