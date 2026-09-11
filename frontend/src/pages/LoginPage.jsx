@@ -53,14 +53,14 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
-            <label>Username</label>
+            <label>Username / Email</label>
             <div className="input-with-icon">
               <User size={18} />
               <input 
                 type="text" 
                 value={username} 
                 onChange={(e) => setUsername(e.target.value)} 
-                placeholder="Enter username"
+                placeholder="Enter username or email"
                 required
               />
             </div>

@@ -12,4 +12,3 @@ describe('GUS Research Lab Frontend Tests', () => {
     expect(1 + 1).toBe(2);
   });
 });
-EOF

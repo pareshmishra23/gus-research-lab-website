@@ -6,6 +6,7 @@ import ResearchPage from './pages/ResearchPage';
 import BlogPage from './pages/BlogPage';
 import PublicationsPage from './pages/PublicationsPage';
 import AIResearchAssistant from './pages/AIResearchAssistant';
+import ProjectDetailPage from './pages/ProjectDetailPage';
 import VideosPage from './pages/VideosPage';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/admin/Dashboard';
@@ -58,12 +59,13 @@ function AnimatedRoutes() {
         {/* Public Routes */}
         <Route path="/" element={<PageWrapper><HomePage /></PageWrapper>} />
         <Route path="/research" element={<PageWrapper><ResearchPage /></PageWrapper>} />
+        <Route path="/research/:projectId" element={<PageWrapper><ProjectDetailPage /></PageWrapper>} />
         <Route path="/blog" element={<PageWrapper><BlogPage /></PageWrapper>} />
         <Route path="/publications" element={<PageWrapper><PublicationsPage /></PageWrapper>} />
         <Route path="/videos" element={<PageWrapper><VideosPage /></PageWrapper>} />
         <Route path="/ai-assistant" element={<PageWrapper><AIResearchAssistant /></PageWrapper>} />
         <Route path="/login" element={<PageWrapper><LoginPage /></PageWrapper>} />
-        <Route path="/admin" element={<PageWrapper><AdminPage /></PageWrapper>} />
+        <Route path="/admin" element={<ProtectedRoute><AdminLayout><PageWrapper><AdminPage /></PageWrapper></AdminLayout></ProtectedRoute>} />
 
         {/* Admin Dashboard Routes */}
         <Route path="/admin/dashboard" element={<ProtectedRoute><AdminLayout><PageWrapper><Dashboard /></PageWrapper></AdminLayout></ProtectedRoute>} />
@@ -87,7 +89,7 @@ function App() {
 
 function RoutesWrapper() {
   const location = useLocation();
-  const isAdminPath = location.pathname.startsWith('/admin') && location.pathname !== '/admin';
+  const isAdminPath = location.pathname.startsWith('/admin');
 
   if (isAdminPath) {
     return (

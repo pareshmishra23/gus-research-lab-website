@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, FlaskConical, BookOpen, FileText, Bot, User } from 'lucide-react';
+import { Menu, X, FlaskConical, BookOpen, FileText, Bot } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
@@ -32,9 +32,20 @@ export default function Navbar() {
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="nav-container">
-        <Link to="/" className="nav-logo">
-          <FlaskConical size={28} />
-          <span>GUS LAB</span>
+        <Link to="/" className="nav-logo" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <img 
+            src="/assets/logo.jpg" 
+            alt="GUS Research Lab" 
+            style={{ 
+              height: '38px', 
+              width: '38px', 
+              borderRadius: '50%', 
+              objectFit: 'cover',
+              border: '1.5px solid rgba(255, 255, 255, 0.3)',
+              boxShadow: '0 0 10px rgba(239, 68, 68, 0.3)'
+            }} 
+          />
+          <span style={{ fontWeight: 700, letterSpacing: '0.03em' }}>GUS LAB</span>
         </Link>
 
         {/* Desktop Nav */}
@@ -48,9 +59,6 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Link to="/admin/dashboard" className="nav-link admin-link">
-            <User size={18} /> Admin
-          </Link>
         </div>
 
         {/* Mobile Toggle */}
@@ -78,9 +86,6 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <Link to="/admin/dashboard" className="mobile-link">
-              <User size={20} /> Admin Panel
-            </Link>
           </motion.div>
         )}
       </AnimatePresence>
