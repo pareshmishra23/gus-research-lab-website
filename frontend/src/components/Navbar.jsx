@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, FlaskConical, BookOpen, FileText, Bot } from 'lucide-react';
+import { Menu, X, FlaskConical, BookOpen, FileText, Bot, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getPublicSiteSettings } from '../services/projectService';
 
@@ -11,6 +11,7 @@ const defaultNavLinks = [
   { path: '/publications', label: 'Publications', icon: FileText },
   { path: '/videos', label: 'Videos', icon: FlaskConical },
   { path: '/ai-assistant', label: 'AI Assistant', icon: Bot },
+  { path: '/admin', label: 'Admin Panel', icon: Shield },
 ];
 
 export default function Navbar() {
@@ -48,7 +49,7 @@ export default function Navbar() {
             .map(n => ({
               path: n.url || '/',
               label: n.label || 'Link',
-              icon: FlaskConical
+              icon: n.label === 'Admin Panel' ? Shield : (n.label === 'AI Assistant' ? Bot : FlaskConical)
             }));
           setNavItems(enabledLinks);
         }

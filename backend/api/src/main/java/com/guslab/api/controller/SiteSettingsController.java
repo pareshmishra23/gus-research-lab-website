@@ -41,27 +41,51 @@ public class SiteSettingsController {
         List<SiteSettings> all = siteSettingsRepository.findAll();
         SiteSettings current = all.isEmpty() ? new SiteSettings() : all.get(0);
 
-        current.setSiteName(updated.getSiteName());
-        current.setShortName(updated.getShortName());
-        current.setFooterDescription(updated.getFooterDescription());
-        current.setContactEmail(updated.getContactEmail());
-        current.setContactPhone(updated.getContactPhone());
-        current.setContactAddress(updated.getContactAddress());
+        if (updated.getSiteName() != null && !updated.getSiteName().trim().isEmpty()) {
+            current.setSiteName(updated.getSiteName());
+        }
+        if (updated.getShortName() != null && !updated.getShortName().trim().isEmpty()) {
+            current.setShortName(updated.getShortName());
+        }
+        if (updated.getFooterDescription() != null) {
+            current.setFooterDescription(updated.getFooterDescription());
+        }
+        if (updated.getContactEmail() != null) {
+            current.setContactEmail(updated.getContactEmail());
+        }
+        if (updated.getContactPhone() != null) {
+            current.setContactPhone(updated.getContactPhone());
+        }
+        if (updated.getContactAddress() != null) {
+            current.setContactAddress(updated.getContactAddress());
+        }
 
-        current.setHeroTitle(updated.getHeroTitle());
-        current.setHeroSubtitle(updated.getHeroSubtitle());
-        current.setPrimaryCtaLabel(updated.getPrimaryCtaLabel());
-        current.setPrimaryCtaUrl(updated.getPrimaryCtaUrl());
-        current.setSecondaryCtaLabel(updated.getSecondaryCtaLabel());
-        current.setSecondaryCtaUrl(updated.getSecondaryCtaUrl());
+        if (updated.getHeroTitle() != null) {
+            current.setHeroTitle(updated.getHeroTitle());
+        }
+        if (updated.getHeroSubtitle() != null) {
+            current.setHeroSubtitle(updated.getHeroSubtitle());
+        }
+        if (updated.getPrimaryCtaLabel() != null) {
+            current.setPrimaryCtaLabel(updated.getPrimaryCtaLabel());
+        }
+        if (updated.getPrimaryCtaUrl() != null) {
+            current.setPrimaryCtaUrl(updated.getPrimaryCtaUrl());
+        }
+        if (updated.getSecondaryCtaLabel() != null) {
+            current.setSecondaryCtaLabel(updated.getSecondaryCtaLabel());
+        }
+        if (updated.getSecondaryCtaUrl() != null) {
+            current.setSecondaryCtaUrl(updated.getSecondaryCtaUrl());
+        }
 
-        if (updated.getSocialLinks() != null) {
+        if (updated.getSocialLinks() != null && !updated.getSocialLinks().isEmpty()) {
             current.setSocialLinks(updated.getSocialLinks());
         }
-        if (updated.getFooterLinks() != null) {
+        if (updated.getFooterLinks() != null && !updated.getFooterLinks().isEmpty()) {
             current.setFooterLinks(updated.getFooterLinks());
         }
-        if (updated.getNavigationLinks() != null) {
+        if (updated.getNavigationLinks() != null && !updated.getNavigationLinks().isEmpty()) {
             current.setNavigationLinks(updated.getNavigationLinks());
         }
 
