@@ -9,7 +9,7 @@ export default function Hero() {
       backgroundImage: 'linear-gradient(rgba(10, 17, 40, 0.75), rgba(10, 17, 40, 0.9)), url("/assets/banner.png")',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      padding: '7rem 2rem 6rem',
+      padding: '8rem 2rem 7rem',
       position: 'relative',
       overflow: 'hidden'
     }}>
@@ -71,6 +71,10 @@ export default function Hero() {
           transition={{ duration: 0.6 }}
           className="hero-text"
         >
+          <div style={{ display: 'inline-block', padding: '0.35rem 1.25rem', borderRadius: '9999px', background: 'rgba(59, 130, 246, 0.12)', border: '1px solid rgba(59, 130, 246, 0.3)', color: '#60a5fa', fontSize: '0.85rem', fontWeight: 600, marginBottom: '1.25rem', letterSpacing: '0.04em' }}>
+            AI • ML • Scientific Computing • Experimental Systems
+          </div>
+
           <h1 style={{ fontSize: '3.5rem', fontWeight: 800, textShadow: '0 4px 12px rgba(0,0,0,0.6)', lineHeight: 1.15, marginBottom: '1.5rem', color: '#ffffff' }}>
             Pioneering Scientific Discovery
           </h1>
@@ -78,7 +82,7 @@ export default function Hero() {
             Advancing knowledge through innovative research, collaborative excellence, and cutting-edge technology.
           </p>
 
-          <div className="hero-buttons" style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginTop: '3rem' }}>
+          <div className="hero-buttons" style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginTop: '3.5rem' }}>
             <Link to="/research" className="btn btn-primary" style={{ padding: '0.875rem 2.25rem', fontSize: '1rem', fontWeight: 600, borderRadius: '12px' }}>
               Explore Research <ArrowRight size={20} />
             </Link>
