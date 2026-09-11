@@ -20,44 +20,44 @@ export default function Hero() {
         transition={{ duration: 0.6, delay: 0.2 }}
         style={{ 
           position: 'absolute',
-          top: '1rem',
-          right: '2rem',
-          width: '240px',
+          top: '0.35rem',
+          right: '0.5rem',
+          width: '210px',
           zIndex: 10
         }}
       >
         <div style={{ 
-          borderRadius: '12px', 
+          borderRadius: '10px', 
           border: '1px solid rgba(59, 130, 246, 0.25)',
           backdropFilter: 'blur(16px)',
-          background: 'rgba(10, 17, 40, 0.85)',
-          padding: '0.75rem 0.875rem',
+          background: 'rgba(10, 17, 40, 0.88)',
+          padding: '0.6rem 0.75rem',
           boxShadow: '0 8px 25px rgba(0, 0, 0, 0.5)'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '0.4rem' }}>
-            <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#60a5fa', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Research Portfolio</span>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.6rem', color: '#4ade80', background: 'rgba(74, 222, 128, 0.12)', padding: '0.12rem 0.4rem', borderRadius: '9999px', border: '1px solid rgba(74, 222, 128, 0.25)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '0.3rem' }}>
+            <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#60a5fa', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Research Portfolio</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.2rem', fontSize: '0.55rem', color: '#4ade80', background: 'rgba(74, 222, 128, 0.12)', padding: '0.1rem 0.35rem', borderRadius: '9999px', border: '1px solid rgba(74, 222, 128, 0.25)' }}>
               <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 6px #4ade80' }}></span> Live System
             </span>
           </div>
           
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.4rem', marginBottom: '0.5rem' }}>
-            <div style={{ background: 'rgba(30, 41, 59, 0.7)', padding: '0.35rem 0.45rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#ffffff', lineHeight: 1.1 }}>{projects.length}</div>
-              <div style={{ fontSize: '0.625rem', color: '#94a3b8', marginTop: '2px' }}>Live Projects</div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.35rem', marginBottom: '0.4rem' }}>
+            <div style={{ background: 'rgba(30, 41, 59, 0.7)', padding: '0.3rem 0.4rem', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#ffffff', lineHeight: 1.1 }}>{projects.length}</div>
+              <div style={{ fontSize: '0.575rem', color: '#94a3b8', marginTop: '1px' }}>Live Projects</div>
             </div>
-            <div style={{ background: 'rgba(30, 41, 59, 0.7)', padding: '0.35rem 0.45rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#38bdf8', lineHeight: 1.1 }}>AI / ML</div>
-              <div style={{ fontSize: '0.625rem', color: '#94a3b8', marginTop: '2px' }}>Core Tech</div>
+            <div style={{ background: 'rgba(30, 41, 59, 0.7)', padding: '0.3rem 0.4rem', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#38bdf8', lineHeight: 1.1 }}>AI / ML</div>
+              <div style={{ fontSize: '0.575rem', color: '#94a3b8', marginTop: '1px' }}>Core Tech</div>
             </div>
           </div>
 
-          <div style={{ fontSize: '0.65rem', color: '#cbd5e1', lineHeight: '1.3' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', marginBottom: '0.15rem' }}>
-              <span style={{ color: '#60a5fa', fontSize: '0.55rem' }}>✦</span> <span>Experimental Systems</span>
+          <div style={{ fontSize: '0.6rem', color: '#cbd5e1', lineHeight: '1.25' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', marginBottom: '0.1rem' }}>
+              <span style={{ color: '#60a5fa', fontSize: '0.5rem' }}>✦</span> <span>Experimental Systems</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-              <span style={{ color: '#a78bfa', fontSize: '0.55rem' }}>✦</span> <span>Open Live Demonstrations</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+              <span style={{ color: '#a78bfa', fontSize: '0.5rem' }}>✦</span> <span>Open Live Demonstrations</span>
             </div>
           </div>
         </div>
