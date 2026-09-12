@@ -2,6 +2,8 @@
 *.log
 target/
 backend/api/target/
+backend/api/data/
+data/
 frontend/dist/
 frontend/node_modules/
 node_modules/
