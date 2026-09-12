@@ -20,11 +20,19 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      await login(username, password);
+      await login(username.trim(), password);
       const from = location.state?.from?.pathname || '/admin/dashboard';
       navigate(from, { replace: true });
     } catch (err) {
-      setError('Invalid username or password. Please try again.');
+      if (err.response?.status === 401 || err.response?.status === 400) {
+        setError('Invalid username or password. Please try again.');
+      } else if (err.response?.status === 404) {
+        setError('Backend API endpoint not found (404). Check backend URL.');
+      } else if (err.code === 'ERR_NETWORK') {
+        setError('Cannot connect to backend server. Make sure Spring Boot is running on port 8080.');
+      } else {
+        setError(err.response?.data?.message || err.message || 'Login failed. Please try again.');
+      }
       console.error('Login error:', err);
     } finally {
       setLoading(false);
