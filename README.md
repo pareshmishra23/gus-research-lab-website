@@ -29,8 +29,8 @@ Enterprise full-stack research laboratory platform featuring a dynamic React fro
                                      ▼
                             ┌─────────────────┐
                             │  Database Layer │
-                            │ Persistent H2 / │
-                            │   PostgreSQL    │
+                            │ PostgreSQL 15   │
+                            │ (Oracle Cloud)  │
                             └─────────────────┘
 ```
 
@@ -58,7 +58,7 @@ Enterprise full-stack research laboratory platform featuring a dynamic React fro
 
 ---
 
-## 🚀 Oracle Cloud Production Deployment
+## 🚀 Oracle Cloud Production Deployment (PostgreSQL 15 Default)
 
 ### 1. Initial Setup on Oracle VM
 Clone repository and prepare environment configuration:
@@ -74,7 +74,16 @@ Run the automated SSL bootstrap script to issue Let's Encrypt certificates for `
 
 ### 3. Launch Production Stack
 ```bash
-docker compose up -d --build
+docker compose -f docker-compose.yml up -d --build
+```
+
+---
+
+## 📱 Samsung M31 Deployment (H2 Persistent Embedded DB)
+
+For Termux / Samsung M31 lightweight deployment without PostgreSQL/Nginx overhead:
+```bash
+docker compose -f docker-compose.m31.yml up -d --build
 ```
 
 ---
@@ -104,11 +113,11 @@ docker compose up --build
 
 ## ⚙️ Environment Configuration
 
-The backend defaults to persistent H2 file storage (`jdbc:h2:file:/app/data/guslabdb`) out of the box without requiring any explicit Spring Profile (`--spring.profiles.active`).
+The backend defaults to **PostgreSQL 15** (`jdbc:postgresql://postgres:5432/guslab`) for Oracle Cloud Production, while supporting persistent H2 for Samsung M31 (`docker-compose.m31.yml`) and local fallback.
 
 | Variable | Default Value | Description |
 | :--- | :--- | :--- |
-| `SPRING_DATASOURCE_URL` | `jdbc:h2:file:/app/data/guslabdb;...` | H2 persistent file storage (or Postgres URL) |
+| `SPRING_DATASOURCE_URL` | `jdbc:postgresql://postgres:5432/guslab` | PostgreSQL URL (or H2 file URL for M31) |
 | `JWT_SECRET` | *Configured in env* | 256-bit key for signing Admin JWT tokens |
 | `CORS_ALLOWED_ORIGINS` | `https://gusresearchlab.is-a.bot,...` | Allowed production CORS domains |
 | `VITE_API_BASE_URL` | `/api` | Base URL for frontend REST requests |

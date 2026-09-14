@@ -1,0 +1,56 @@
+# ==============================================================================
+# SAMSUNG M31 DOCKER COMPOSE CONFIGURATION (H2 Persistent Embedded DB)
+# For Termux / Samsung M31 lightweight deployment without PostgreSQL/Nginx overhead
+# Usage on M31:
+#   docker compose -f docker-compose.m31.yml up -d --build
+# ==============================================================================
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_BASE_URL=/api
+    container_name: gus_m31_frontend
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - m31-network
+
+  backend:
+    build:
+      context: ./backend/api
+      dockerfile: Dockerfile
+    container_name: gus_m31_backend
+    restart: unless-stopped
+    environment:
+      - SERVER_PORT=8080
+      - SPRING_DATASOURCE_URL=jdbc:h2:file:/app/data/guslabdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=
+      - SPRING_DATASOURCE_DRIVER=org.h2.Driver
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_DIALECT=org.hibernate.dialect.H2Dialect
+      - JWT_SECRET=${JWT_SECRET:-GusResearchLabSuperSecretKeyThatIsAtLeast256BitsLongForSecurityJWTSigning2026*}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-http://localhost:5173,http://localhost:80,http://localhost}
+    volumes:
+      - m31_backend_data:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 25s
+    networks:
+      - m31-network
+
+volumes:
+  m31_backend_data:
+
+networks:
+  m31-network:
+    driver: bridge

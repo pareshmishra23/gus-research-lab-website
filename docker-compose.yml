@@ -54,14 +54,17 @@ services:
     restart: unless-stopped
     environment:
       - SERVER_PORT=8080
-      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL:-jdbc:h2:file:/app/data/guslabdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL}
-      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME:-sa}
-      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-}
-      - SPRING_DATASOURCE_DRIVER=${SPRING_DATASOURCE_DRIVER:-org.h2.Driver}
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL:-jdbc:postgresql://postgres:5432/guslab}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME:-postgres}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-postgrespassword}
+      - SPRING_DATASOURCE_DRIVER=${SPRING_DATASOURCE_DRIVER:-org.postgresql.Driver}
       - SPRING_JPA_HIBERNATE_DDL_AUTO=${SPRING_JPA_HIBERNATE_DDL_AUTO:-update}
-      - SPRING_JPA_DIALECT=${SPRING_JPA_DIALECT:-org.hibernate.dialect.H2Dialect}
+      - SPRING_JPA_DIALECT=${SPRING_JPA_DIALECT:-org.hibernate.dialect.PostgreSQLDialect}
       - JWT_SECRET=${JWT_SECRET:-GusResearchLabSuperSecretKeyThatIsAtLeast256BitsLongForSecurityJWTSigning2026*}
       - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-https://gusresearchlab.is-a.bot,https://kundali.gusresearchlab.is-a.bot,http://localhost:5173,http://localhost:80,http://localhost}
+    depends_on:
+      postgres:
+        condition: service_healthy
     volumes:
       - backend_data:/app/data
     healthcheck:
