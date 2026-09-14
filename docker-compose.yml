@@ -1,13 +1,100 @@
 services:
+  # ============================================================================
+  # 1. Edge Reverse Proxy (Only service with public ports 80 & 443 exposed)
+  # ============================================================================
+  proxy:
+    image: nginx:alpine
+    container_name: gus_proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx-proxy/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx-proxy/conf.d:/etc/nginx/conf.d:ro
+      - certbot_etc:/etc/letsencrypt:ro
+      - certbot_www:/var/www/certbot:ro
+    restart: unless-stopped
+    depends_on:
+      - frontend
+      - backend
+      - kundali
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 80 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - gus-network
+
+  # ============================================================================
+  # 2. GUS React Frontend (Internal to Docker network)
+  # ============================================================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_BASE_URL=/api
+    container_name: gus_frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - gus-network
+
+  # ============================================================================
+  # 3. GUS Spring Boot REST API (Internal to Docker network)
+  # ============================================================================
+  backend:
+    build:
+      context: ./backend/api
+      dockerfile: Dockerfile
+    container_name: gus_backend
+    restart: unless-stopped
+    environment:
+      - SERVER_PORT=8080
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL:-jdbc:h2:file:/app/data/guslabdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME:-sa}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-}
+      - SPRING_DATASOURCE_DRIVER=${SPRING_DATASOURCE_DRIVER:-org.h2.Driver}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=${SPRING_JPA_HIBERNATE_DDL_AUTO:-update}
+      - SPRING_JPA_DIALECT=${SPRING_JPA_DIALECT:-org.hibernate.dialect.H2Dialect}
+      - JWT_SECRET=${JWT_SECRET:-GusResearchLabSuperSecretKeyThatIsAtLeast256BitsLongForSecurityJWTSigning2026*}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-https://gusresearchlab.is-a.bot,https://kundali.gusresearchlab.is-a.bot,http://localhost:5173,http://localhost:80,http://localhost}
+    volumes:
+      - backend_data:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 25s
+    networks:
+      - gus-network
+
+  # ============================================================================
+  # 4. Kundali Application Service (Internal port 8001)
+  # ============================================================================
+  kundali:
+    image: python:3.10-slim
+    container_name: gus_kundali
+    restart: unless-stopped
+    command: ["python3", "-m", "http.server", "8001"]
+    networks:
+      - gus-network
+
+  # ============================================================================
+  # 5. PostgreSQL Database (Optional internal relational database)
+  # ============================================================================
   postgres:
     image: postgres:15-alpine
     container_name: gus_postgres
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-guslab}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgrespassword}
-    ports:
-      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -18,52 +105,11 @@ services:
     networks:
       - gus-network
 
-  backend:
-    build:
-      context: ./backend/api
-      dockerfile: Dockerfile
-    container_name: gus_backend
-    environment:
-      - SERVER_PORT=8080
-      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL:-jdbc:postgresql://postgres:5432/guslab}
-      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME:-postgres}
-      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-postgrespassword}
-      - SPRING_DATASOURCE_DRIVER=${SPRING_DATASOURCE_DRIVER:-org.postgresql.Driver}
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=${SPRING_JPA_HIBERNATE_DDL_AUTO:-update}
-      - SPRING_JPA_DIALECT=${SPRING_JPA_DIALECT:-org.hibernate.dialect.PostgreSQLDialect}
-      - JWT_SECRET=${JWT_SECRET:-GusResearchLabSuperSecretKeyThatIsAtLeast256BitsLongForSecurityJWTSigning2026*}
-      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-http://localhost:5173,http://localhost:80,http://localhost}
-    ports:
-      - "${BACKEND_PORT:-8080}:8080"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
-      interval: 15s
-      timeout: 5s
-      retries: 5
-      start_period: 25s
-    networks:
-      - gus-network
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-      args:
-        - VITE_API_BASE_URL=/api
-    container_name: gus_frontend
-    ports:
-      - "${FRONTEND_PORT:-80}:80"
-    depends_on:
-      backend:
-        condition: service_healthy
-    networks:
-      - gus-network
-
 volumes:
+  backend_data:
   postgres_data:
+  certbot_etc:
+  certbot_www:
 
 networks:
   gus-network:

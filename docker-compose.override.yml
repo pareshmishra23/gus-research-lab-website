@@ -1,0 +1,15 @@
+# ==============================================================================
+# LOCAL DEVELOPMENT DOCKER COMPOSE OVERRIDE (For local Mac testing)
+# In production on Oracle VM, do not include this file, or run:
+#   docker compose -f docker-compose.yml up -d --build
+# ==============================================================================
+
+services:
+  # Optional local direct port mappings for local developer debugging
+  backend:
+    ports:
+      - "8080:8080"
+
+  postgres:
+    ports:
+      - "5432:5432"

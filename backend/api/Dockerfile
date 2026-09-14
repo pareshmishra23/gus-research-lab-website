@@ -9,6 +9,7 @@ RUN mvn package -DskipTests
 # Stage 2: Production JRE Runtime (Multi-architecture ARM64 / x86_64 support)
 FROM eclipse-temurin:17-jre
 WORKDIR /app
+RUN mkdir -p /app/data
 COPY --from=builder /build/target/*.jar app.jar
 
 EXPOSE 8080
