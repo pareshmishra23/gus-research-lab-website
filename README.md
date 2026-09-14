@@ -1,64 +1,63 @@
 # GUS Research Lab — Oracle Cloud Production & Full-Stack CMS
 
-Enterprise full-stack research laboratory platform featuring a dynamic React frontend, Spring Boot 3.2 REST API backend, Admin Content Management System (CMS), role-based security, audit logging, dedicated Nginx edge reverse-proxy with SSL termination (Let's Encrypt), domain routing for GUS Research Lab & Kundali, complete internal port isolation, and H2/PostgreSQL database support.
+Enterprise full-stack research laboratory platform featuring a dynamic React frontend, Spring Boot 3.2 REST API backend, Admin Content Management System (CMS), role-based security, audit logging, host Nginx integration, domain routing for GUS Research Lab & Kundali, complete internal port isolation, and PostgreSQL 15 / H2 database support.
 
 ---
 
 ## 🏛️ System Architecture
 
 ```text
-                  PUBLIC INTERNET (Ports 80 & 443 ONLY)
-                                     │
-                                     ▼
+                  PUBLIC INTERNET (Host Nginx Ports 80 & 443)
+                                      │
+                                      ▼
         ┌────────────────────────────────────────────────────────┐
-        │            Nginx Edge Reverse Proxy (proxy)            │
+        │                 Oracle Host Nginx                      │
         │               Ports 80 (HTTP) & 443 (HTTPS)            │
-        └────────────────────────────┬───────────────────────────┘
-                                     │
-           Private Docker Network (gus-network — Isolated Internal Ports)
-                                     │
-          ┌──────────────────────────┼──────────────────────────┐
-          │                          │                          │
-          ▼                          ▼                          ▼
- ┌─────────────────┐        ┌─────────────────┐        ┌─────────────────┐
- │  gus_frontend   │        │   gus_backend   │        │   gus_kundali   │
- │   React App     │        │ Spring Boot API │        │   Kundali App   │
- │ (Internal :80)  │        │ (Internal :8080)│        │ (Internal :8001)│
- └─────────────────┘        └────────┬────────┘        └─────────────────┘
-                                     │
-                                     ▼
-                            ┌─────────────────┐
-                            │  Database Layer │
-                            │ PostgreSQL 15   │
-                            │ (Oracle Cloud)  │
-                            └─────────────────┘
+        └───────────────┬────────────────────────┬───────────────┘
+                        │                        │
+         Proxy to 127.0.0.1:8081                 │ Proxy to 127.0.0.1:7860
+                        │                        │
+                        ▼                        ▼
+     ┌────────────────────────────────────┐    ┌──────────────────────────────────┐
+     │ GUS Docker Frontend Container      │    │ Existing Host Kundali / Camel ADK│
+     │ Bound ONLY to 127.0.0.1:8081       │    │ Service (Port 7860)              │
+     └─────────────────┬──────────────────┘    └──────────────────────────────────┘
+                       │
+            Private Docker Network (gus-network — Internal Ports)
+                       │
+           ┌───────────┴───────────┐
+           │                       │
+           ▼                       ▼
+  ┌─────────────────┐     ┌─────────────────┐
+  │   gus_backend   │ ──► │  gus_postgres   │
+  │ Spring Boot API │     │ PostgreSQL 15   │
+  │ (Internal :8080)│     │ (Internal :5432)│
+  └─────────────────┘     └─────────────────┘
 ```
 
 ---
 
 ## 🌐 Domain & Service Routing
 
-| Public Domain Name | SSL Cert | Internal Target Service | Purpose |
+| Public Domain Name | SSL Cert | Target Service | Purpose |
 | :--- | :--- | :--- | :--- |
-| **`https://gusresearchlab.is-a.bot`** | Let's Encrypt | `frontend:80` (App) / `backend:8080` (`/api`) | GUS Research Lab Public Web & Admin CMS |
-| **`https://kundali.gusresearchlab.is-a.bot`** | Let's Encrypt | `kundali:8001` | Kundali Application Service |
+| **`https://gusresearchlab.is-a.bot`** | Host Certbot | `127.0.0.1:8081` (GUS Docker Frontend) | GUS Research Lab Public Web & Admin CMS |
+| **`https://kundali.gusresearchlab.is-a.bot`** | Host Certbot | `127.0.0.1:7860` (Existing Kundali Service) | Kundali Application Service |
 | **HTTP (`http://*`)** | N/A | Redirects to `301 https://$host$request_uri` | Automatic HTTP to HTTPS redirection |
 
 ---
 
 ## 🔒 Security & Port Isolation Map
 
-| Container Service | Public Host Ports | Internal Docker Network Port | Public Access |
+| Container Service | Public Host Ports | Bound Interface | Public Access |
 | :--- | :--- | :--- | :--- |
-| **`proxy` (Nginx)** | **`80:80`**, **`443:443`** | `80`, `443` | ✅ **Exposed to Internet** |
-| **`frontend`** | *None* | `80` | 🔒 Private to `gus-network` |
-| **`backend`** | *None* | `8080` | 🔒 Private to `gus-network` |
-| **`kundali`** | *None* | `8001` | 🔒 Private to `gus-network` |
-| **`postgres`** | *None* | `5432` | 🔒 Private to `gus-network` |
+| **`frontend`** | `8081` | `127.0.0.1:8081` (Localhost ONLY) | 🔒 Localhost Host Proxy |
+| **`backend`** | *None* | Internal to `gus-network` | 🔒 Private Docker Network |
+| **`postgres`** | *None* | Internal to `gus-network` | 🔒 Private Docker Network |
 
 ---
 
-## 🚀 Oracle Cloud Production Deployment (PostgreSQL 15 Default)
+## 🚀 Oracle Cloud Production Deployment (Host Nginx Integration)
 
 ### 1. Initial Setup on Oracle VM
 Clone repository and prepare environment configuration:
@@ -66,15 +65,16 @@ Clone repository and prepare environment configuration:
 cp .env.example .env
 ```
 
-### 2. Issue Let's Encrypt SSL Certificates
-Run the automated SSL bootstrap script to issue Let's Encrypt certificates for `gusresearchlab.is-a.bot` and `kundali.gusresearchlab.is-a.bot`:
+### 2. Launch Production Docker Stack
 ```bash
-./scripts/init-letsencrypt.sh paresh.mishra23@gmail.com
+docker compose up -d --build
 ```
+*GUS Frontend will be available locally on `127.0.0.1:8081`.*
 
-### 3. Launch Production Stack
+### 3. Host Nginx Configuration
+Add the host Nginx server block configuration found in [`docs/host-nginx-gusresearchlab.conf`](file:///Users/pareshmishra/Documents/developments/gus-research-lab-website/docs/host-nginx-gusresearchlab.conf) to your host `/etc/nginx/sites-available/` directory. Then reload host Nginx:
 ```bash
-docker compose -f docker-compose.yml up -d --build
+sudo nginx -t && sudo systemctl reload nginx
 ```
 
 ---

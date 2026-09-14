@@ -1,33 +1,6 @@
 services:
   # ============================================================================
-  # 1. Edge Reverse Proxy (Only service with public ports 80 & 443 exposed)
-  # ============================================================================
-  proxy:
-    image: nginx:alpine
-    container_name: gus_proxy
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx-proxy/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx-proxy/conf.d:/etc/nginx/conf.d:ro
-      - certbot_etc:/etc/letsencrypt:ro
-      - certbot_www:/var/www/certbot:ro
-    restart: unless-stopped
-    depends_on:
-      - frontend
-      - backend
-      - kundali
-    healthcheck:
-      test: ["CMD-SHELL", "nc -z localhost 80 || exit 1"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
-    networks:
-      - gus-network
-
-  # ============================================================================
-  # 2. GUS React Frontend (Internal to Docker network)
+  # 1. GUS React Frontend (Exposed ONLY on localhost 127.0.0.1:8081 for host Nginx)
   # ============================================================================
   frontend:
     build:
@@ -36,6 +9,8 @@ services:
       args:
         - VITE_API_BASE_URL=/api
     container_name: gus_frontend
+    ports:
+      - "127.0.0.1:8081:80"
     restart: unless-stopped
     depends_on:
       backend:
@@ -44,7 +19,7 @@ services:
       - gus-network
 
   # ============================================================================
-  # 3. GUS Spring Boot REST API (Internal to Docker network)
+  # 2. GUS Spring Boot REST API (Strictly internal to Docker network)
   # ============================================================================
   backend:
     build:
@@ -61,7 +36,7 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=${SPRING_JPA_HIBERNATE_DDL_AUTO:-update}
       - SPRING_JPA_DIALECT=${SPRING_JPA_DIALECT:-org.hibernate.dialect.PostgreSQLDialect}
       - JWT_SECRET=${JWT_SECRET:-GusResearchLabSuperSecretKeyThatIsAtLeast256BitsLongForSecurityJWTSigning2026*}
-      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-https://gusresearchlab.is-a.bot,https://kundali.gusresearchlab.is-a.bot,http://localhost:5173,http://localhost:80,http://localhost}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-https://gusresearchlab.is-a.bot,https://kundali.gusresearchlab.is-a.bot,http://localhost:5173,http://localhost:8081,http://localhost}
     depends_on:
       postgres:
         condition: service_healthy
@@ -77,18 +52,7 @@ services:
       - gus-network
 
   # ============================================================================
-  # 4. Kundali Application Service (Internal port 8001)
-  # ============================================================================
-  kundali:
-    image: python:3.10-slim
-    container_name: gus_kundali
-    restart: unless-stopped
-    command: ["python3", "-m", "http.server", "8001"]
-    networks:
-      - gus-network
-
-  # ============================================================================
-  # 5. PostgreSQL Database (Optional internal relational database)
+  # 3. PostgreSQL Database (Strictly internal to Docker network)
   # ============================================================================
   postgres:
     image: postgres:15-alpine
@@ -111,8 +75,6 @@ services:
 volumes:
   backend_data:
   postgres_data:
-  certbot_etc:
-  certbot_www:
 
 networks:
   gus-network:
