@@ -5,11 +5,11 @@
 # ==============================================================================
 
 services:
-  # Optional local direct port mappings for local developer debugging
+  # Host port mappings for direct debugging (uses alternate ports to avoid collisions with host services like Camel/ADK on 8080)
   backend:
     ports:
-      - "8080:8080"
+      - "127.0.0.1:${BACKEND_HOST_PORT:-8085}:8080"
 
   postgres:
     ports:
-      - "5432:5432"
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-5433}:5432"
