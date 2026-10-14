@@ -89,7 +89,7 @@ export default function AIResearchAssistant() {
     }, 1200);
   };
 
-  const usePrompt = (text) => {
+  const applyPrompt = (text) => {
     handleSend(null, text);
   };
 
@@ -119,7 +119,7 @@ export default function AIResearchAssistant() {
                   <button 
                     key={prompt.id} 
                     className="prompt-item"
-                    onClick={() => usePrompt(prompt.text)}
+                    onClick={() => applyPrompt(prompt.text)}
                     style={{ 
                       textAlign: 'left', 
                       padding: '0.75rem', 

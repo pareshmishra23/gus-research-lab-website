@@ -75,7 +75,7 @@ export default function Articles() {
       <div className="admin-header-actions" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem' }}>
         <div className="search-bar" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: '#0a1128', padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid #1a3a70' }}>
           <Search size={20} color="#4a7bba" />
-          <input type="text" placeholder="Search articles..." style={{ background: 'transparent', border: 'none', color: 'white', outline: none }} />
+          <input type="text" placeholder="Search articles..." style={{ background: 'transparent', border: 'none', color: 'white', outline: 'none' }} />
         </div>
         <button className="btn btn-primary" onClick={() => setIsAdding(true)}>
           <Plus size={20} /> Add New Article
